@@ -813,12 +813,28 @@ jobs:
 
 
 workflows:
+  lint:
+    jobs:
+      - lint-python
+      - lint-go
+      - lint-elm
+      - lint-react
+
   test-cli:
     jobs:
       - test-cli:
           matrix:
             parameters:
               executor-name: ["python-35", "python-36", "python-37", "win/default"]
+
+  test-unit:
+    jobs:
+      - test-unit-go
+      - test-unit-elm
+      - test-unit-react
+      - test-unit-harness
+      - test-unit-harness-tf2
+
   test-e2e:
     jobs:
       - build-elm
@@ -940,24 +956,6 @@ workflows:
     jobs:
       - nightly-tests:
           context: aws
-          filters:
-            branches:
-              ignore:
-                - /pull\/.*/
-
-  test-unit:
-    jobs:
-      - test-unit-go
-      - test-unit-elm
-      - test-unit-react
-      - test-unit-harness
-      - test-unit-harness-tf2
-  lint:
-    jobs:
-      - lint-python
-      - lint-go
-      - lint-elm
-      - lint-react
 
   release:
     jobs:
@@ -1005,4 +1003,3 @@ workflows:
             - build-debs
           context: determined-production
           filters: *release-filters
-
